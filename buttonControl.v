@@ -5,7 +5,6 @@ module buttonControl(
     output reg valid_vote
 );
     reg [30:0] counter;
-
     always @(posedge clock) begin
         if(reset)
             counter <= 0;
@@ -16,7 +15,6 @@ module buttonControl(
                 counter <= 0;
         end
     end
-
     always @(posedge clock) begin
         if(reset)
             valid_vote <= 1'b0;
