@@ -1,5 +1,4 @@
 `timescale 1ns / 1ps
-
 module digitalVotingMachineFSM (
     input clock,
     input reset,
@@ -10,15 +9,12 @@ module digitalVotingMachineFSM (
     input cand4_button,
     output [7:0] leds
 );
-
     parameter IDLE     = 3'b000;
     parameter VOTING   = 3'b001;
     parameter REGISTER = 3'b010;
     parameter LOCKOUT  = 3'b011;
     parameter RESULT   = 3'b100;
-
     reg [2:0] current_state, next_state;
-
     reg b1, b2, b3, b4;
     always @(posedge clock) begin
         b1 <= cand1_button;
@@ -26,16 +22,13 @@ module digitalVotingMachineFSM (
         b3 <= cand3_button;
         b4 <= cand4_button;
     end
-
     wire single_press;
     assign single_press = (b1 + b2 + b3 + b4) == 1;
-
     wire v1, v2, v3, v4;
     buttonControl bc1 (clock, reset, b1, v1);
     buttonControl bc2 (clock, reset, b2, v2);
     buttonControl bc3 (clock, reset, b3, v3);
     buttonControl bc4 (clock, reset, b4, v4);
-
     wire [7:0] c1_votes, c2_votes, c3_votes, c4_votes;
     voteLogger logger (
         .clock(clock),
@@ -50,7 +43,6 @@ module digitalVotingMachineFSM (
         .cand3_vote_recvd(c3_votes),
         .cand4_vote_recvd(c4_votes)
     );
-
     // Simplified Reset Logic
     always @(posedge clock) begin
         if (reset)
@@ -58,7 +50,6 @@ module digitalVotingMachineFSM (
         else
             current_state <= next_state;
     end
-
     always @(*) begin
         next_state = current_state;
         case (current_state)
@@ -71,22 +62,18 @@ module digitalVotingMachineFSM (
             default:  next_state = IDLE;
         endcase
     end
-
    modeControl display (
     .clock(clock),
     .reset(reset),
     .mode(mode),
-
     .cand1_button(b1),
     .cand2_button(b2),
     .cand3_button(b3),
     .cand4_button(b4),
-
     .cand1_vote_recvd(c1_votes),
     .cand2_vote_recvd(c2_votes),
     .cand3_vote_recvd(c3_votes),
     .cand4_vote_recvd(c4_votes),
-
     .leds(leds)
 );
 endmodule
