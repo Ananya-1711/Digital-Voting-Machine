@@ -11,8 +11,6 @@ output reg [7:0] cand2_vote_recvd,
 output reg [7:0] cand3_vote_recvd,
 output reg [7:0] cand4_vote_recvd
 );
-
-
 always @(posedge clock)
 begin
     if(reset)
@@ -34,6 +32,4 @@ begin
             cand4_vote_recvd <= cand4_vote_recvd + 1;
     end
 end
-
-
 endmodule
